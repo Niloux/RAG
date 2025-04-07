@@ -2,7 +2,6 @@ langchain
 langchain-community
 langchain-core
 langchain-deepseek
-langchain-google-vertexai
 python-multipart
 pypdf
 chromadb

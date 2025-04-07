@@ -1,6 +1,6 @@
 # 学术论文问答系统
 
-一个基于 RAG (Retrieval-Augmented Generation) 的学术论文智能问答系统，支持 PDF 论文上传和智能问答。
+一个基于LangChain RAG (Retrieval-Augmented Generation) 的学术论文智能问答系统，支持 PDF 论文上传和智能问答。
 
 ## 功能特点
 
@@ -17,7 +17,7 @@
 - 前端：HTML5 + CSS3 + JavaScript
 - 向量数据库：Chroma
 - 大语言模型：DeepSeek
-- 文本处理：LangChain
+- 框架：LangChain
 
 ## 安装说明
 
