@@ -7,13 +7,18 @@ from typing import Optional
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from langchain.chains import RetrievalQA
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import FakeEmbeddings
 from langchain_community.vectorstores import Chroma
+from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_deepseek import ChatDeepSeek
 from pydantic import BaseModel, Field
+
+system_prompt = """You are an assistant for question-answering tasks.
+Use the following pieces of retrieved context to answer the question.
+If you don't know the answer, just say that you don't know.
+Context: {context}:"""
 
 # 配置日志
 logging.basicConfig(
@@ -135,17 +140,22 @@ async def query_papers(query: Query):
     """查询论文内容"""
     try:
         # 创建检索链
-        qa_chain = RetrievalQA.from_chain_type(
-            llm=llm,
-            chain_type="stuff",
-            retriever=vectorstore.as_retriever(search_kwargs={"k": query.top_k}),
-        )
+        retrieved_docs = vectorstore.similarity_search(query.question, k=query.top_k)
+        logger.info(f"成功检索到 {len(retrieved_docs)} 个文档")
+        context = "\n".join([doc.page_content for doc in retrieved_docs])
+        prompt = system_prompt.format(context=context)
+        logger.info(f"提示词: {prompt}")
+        messages = [
+            SystemMessage(content=prompt),
+            HumanMessage(content=query.question),
+        ]
+        response = llm.invoke(messages)
+        answer = response.content
 
         # 执行查询
-        result = qa_chain.run(query.question)
         logger.info(f"成功处理查询: {query.question}")
 
-        return Response(status="success", message="查询成功", data={"answer": result})
+        return Response(status="success", message="查询成功", data={"answer": answer})
 
     except Exception as e:
         logger.error(f"查询处理失败: {str(e)}")
