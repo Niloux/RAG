@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术论文问答系统</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>学术论文问答系统</h1>
+            <p>上传PDF论文，获取智能问答服务</p>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <h2>上传论文</h2>
+                <div class="upload-area" id="dropZone">
+                    <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                    <div class="upload-content">
+                        <img src="/static/upload-icon.svg" alt="上传图标" class="upload-icon">
+                        <p>拖拽PDF文件到此处或点击上传</p>
+                        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">选择文件</button>
+                    </div>
+                </div>
+                <div id="uploadStatus" class="status"></div>
+            </section>
+
+            <section class="chat-section">
+                <h2>智能问答</h2>
+                <div class="chat-container">
+                    <div id="chatMessages" class="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="输入您的问题...">
+                        <button onclick="sendQuestion()">发送</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+
+</html>
